@@ -29,11 +29,11 @@ export function sortVideos(
         break;
 
       case 'comments':
-        comparison = a.commentRate - b.commentRate;
+        comparison = (a.commentRate || 0) - (b.commentRate || 0);
         break;
 
       case 'likes':
-        comparison = a.likeRate - b.likeRate;
+        comparison = (a.likeRate || 0) - (b.likeRate || 0);
         break;
 
       default:
@@ -79,7 +79,7 @@ export function getSortOrderDisplayName(
 /**
  * デフォルトのソート順序を取得
  */
-export function getDefaultSortOrder(sortType: SortType): SortOrder {
+export function getDefaultSortOrder(_sortType: SortType): SortOrder {
   // 投稿日は新しい順がデフォルト、それ以外は高い順がデフォルト
   return 'desc';
 }

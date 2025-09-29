@@ -1,11 +1,9 @@
 'use client';
 
 import { Search, TrendingUp, BarChart3, Users } from 'lucide-react';
-import { useState } from 'react';
+import SearchBar from '@/components/SearchBar';
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState('');
-
   const features = [
     {
       icon: <Search className="w-6 h-6" />,
@@ -29,14 +27,6 @@ export default function Home() {
     },
   ];
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      // TODO: 検索処理を実装
-      console.log('Searching for:', searchQuery);
-    }
-  };
-
   return (
     <div className="animate-fade-in">
       {/* ヒーローセクション */}
@@ -55,26 +45,9 @@ export default function Home() {
             </p>
 
             {/* 検索フォーム */}
-            <form onSubmit={handleSearch} className="mb-8">
-              <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="YouTubeチャンネル名を入力"
-                  className="input-field flex-1"
-                  aria-label="チャンネル名"
-                />
-                <button
-                  type="submit"
-                  className="btn-primary flex items-center justify-center gap-2"
-                  disabled={!searchQuery.trim()}
-                >
-                  <Search className="w-5 h-5" />
-                  <span>分析開始</span>
-                </button>
-              </div>
-            </form>
+            <div className="mb-8">
+              <SearchBar className="max-w-xl mx-auto" autoFocus />
+            </div>
 
             {/* サンプル検索 */}
             <div className="text-sm text-gray-600 dark:text-gray-400">

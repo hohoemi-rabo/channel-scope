@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { YouTubeChannel, YouTubeVideo } from '@/types';
 import ChannelCard from '@/components/ChannelCard';
 import VideoList from '@/components/VideoList';
+import SortTabs from '@/components/SortTabs';
 
 export default function ChannelPage() {
   const params = useParams();
@@ -142,6 +143,10 @@ export default function ChannelPage() {
         <h2 className="text-2xl font-bold mb-6">
           最新動画 ({videos.length}本)
         </h2>
+
+        {/* ソートタブ */}
+        <SortTabs />
+
         <VideoList videos={videos} />
       </div>
     </div>

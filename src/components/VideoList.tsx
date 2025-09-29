@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { YouTubeVideo } from '@/types';
+import { useSortStore } from '@/lib/store';
+import { sortVideos } from '@/lib/sort-utils';
 import VideoCard from './VideoCard';
 
 interface VideoListProps {
@@ -8,12 +10,33 @@ interface VideoListProps {
 
 export default function VideoList({ videos }: VideoListProps) {
   const [visibleCount, setVisibleCount] = useState(10);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const { sortType, sortOrder } = useSortStore();
+
+  // ソートされた動画リストをメモ化
+  const sortedVideos = useMemo(() => {
+    return sortVideos(videos, sortType, sortOrder);
+  }, [videos, sortType, sortOrder]);
+
+  // ソート条件が変わったときに表示数をリセットしてアニメーション
+  useEffect(() => {
+    setIsTransitioning(true);
+    setVisibleCount(10);
+
+    const timer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [sortType, sortOrder]);
 
   const handleLoadMore = () => {
-    setVisibleCount(prev => Math.min(prev + 10, videos.length));
+    setVisibleCount(prev => Math.min(prev + 10, sortedVideos.length));
   };
 
-  const visibleVideos = videos.slice(0, visibleCount);
+  const visibleVideos = useMemo(() => {
+    return sortedVideos.slice(0, visibleCount);
+  }, [sortedVideos, visibleCount]);
 
   if (videos.length === 0) {
     return (
@@ -46,10 +69,14 @@ export default function VideoList({ videos }: VideoListProps) {
   return (
     <div>
       {/* 動画リスト */}
-      <div className="space-y-6">
+      <div
+        className={`space-y-6 transition-opacity duration-150 ${
+          isTransitioning ? 'opacity-50' : 'opacity-100'
+        }`}
+      >
         {visibleVideos.map((video, index) => (
           <div
-            key={video.id}
+            key={`${sortType}-${sortOrder}-${video.id}`}
             className="animate-slide-up"
             style={{ animationDelay: `${index * 0.05}s` }}
           >
@@ -59,25 +86,25 @@ export default function VideoList({ videos }: VideoListProps) {
       </div>
 
       {/* もっと見るボタン */}
-      {visibleCount < videos.length && (
+      {visibleCount < sortedVideos.length && (
         <div className="text-center mt-8">
           <button
             onClick={handleLoadMore}
             className="btn-secondary"
           >
-            さらに{Math.min(10, videos.length - visibleCount)}本の動画を表示
+            さらに{Math.min(10, sortedVideos.length - visibleCount)}本の動画を表示
             <span className="text-sm ml-2">
-              ({visibleCount}/{videos.length})
+              ({visibleCount}/{sortedVideos.length})
             </span>
           </button>
         </div>
       )}
 
       {/* 全件表示済みの場合 */}
-      {visibleCount >= videos.length && videos.length > 10 && (
+      {visibleCount >= sortedVideos.length && sortedVideos.length > 10 && (
         <div className="text-center mt-8 py-6 border-t border-gray-200 dark:border-gray-700">
           <p className="text-gray-600 dark:text-gray-400">
-            全{videos.length}本の動画を表示しました
+            全{sortedVideos.length}本の動画を表示しました
           </p>
         </div>
       )}

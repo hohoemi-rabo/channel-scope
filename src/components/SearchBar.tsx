@@ -38,7 +38,16 @@ export default function SearchBar({ className = '', autoFocus = false }: SearchB
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'チャンネルの検索に失敗しました');
+        // レート制限エラーかチェック
+        if (response.status === 429) {
+          const waitTime = data.retryAfter || 60;
+          setError(`リクエスト制限に達しました。${waitTime}秒後に再度お試しください。`);
+        } else {
+          setError(data.error || 'チャンネルの検索に失敗しました');
+        }
+        setSuggestions([]);
+        setShowDropdown(false);
+        return;
       }
 
       setSuggestions(data.channels || []);
@@ -47,6 +56,7 @@ export default function SearchBar({ className = '', autoFocus = false }: SearchB
       console.error('Search error:', err);
       setError(err instanceof Error ? err.message : 'エラーが発生しました');
       setSuggestions([]);
+      setShowDropdown(false);
     } finally {
       setIsLoading(false);
     }
@@ -179,8 +189,23 @@ export default function SearchBar({ className = '', autoFocus = false }: SearchB
 
       {/* エラー表示 */}
       {error && (
-        <div className="absolute w-full mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
-          {error}
+        <div className={`absolute w-full mt-2 p-3 border rounded-lg text-sm ${
+          error.includes('リクエスト制限')
+            ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400'
+            : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+        }`}>
+          <div className="flex items-start gap-2">
+            {error.includes('リクエスト制限') ? (
+              <div className="flex-shrink-0 mt-0.5">
+                ⏱️
+              </div>
+            ) : (
+              <div className="flex-shrink-0 mt-0.5">
+                ❌
+              </div>
+            )}
+            <div>{error}</div>
+          </div>
         </div>
       )}
 

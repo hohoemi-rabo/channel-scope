@@ -9,25 +9,25 @@ YouTube Data API v3との連携実装とAPIルートの構築
 - サーバーサイドでのAPIキー管理
 
 ## Todo
-- [ ] YouTube APIクライアントの作成 (lib/youtube.ts)
-  - [ ] API初期化処理
-  - [ ] エラーハンドリング
-  - [ ] レート制限対策
-- [ ] チャンネル検索APIルート (/api/youtube/search/route.ts)
-  - [ ] チャンネル検索エンドポイント
-  - [ ] レスポンス形式の定義
-  - [ ] エラーハンドリング
-- [ ] チャンネル詳細APIルート (/api/youtube/channel/[id]/route.ts)
-  - [ ] チャンネル情報取得
-  - [ ] 動画リスト取得（最新50本）
-  - [ ] 動画統計情報取得
-- [ ] APIレスポンスの型定義
-  - [ ] Channel型
-  - [ ] Video型
-  - [ ] Statistics型
-- [ ] API使用量の監視
-  - [ ] ユニット消費量の計算
-  - [ ] 制限到達時の処理
+- [x] YouTube APIクライアントの作成 (lib/youtube.ts)
+  - [x] API初期化処理
+  - [x] エラーハンドリング
+  - [x] レート制限対策
+- [x] チャンネル検索APIルート (/api/youtube/search/route.ts)
+  - [x] チャンネル検索エンドポイント
+  - [x] レスポンス形式の定義
+  - [x] エラーハンドリング
+- [x] チャンネル詳細APIルート (/api/youtube/channel/[id]/route.ts)
+  - [x] チャンネル情報取得
+  - [x] 動画リスト取得（最新50本）
+  - [x] 動画統計情報取得
+- [x] APIレスポンスの型定義
+  - [x] Channel型
+  - [x] Video型
+  - [x] Statistics型
+- [x] API使用量の監視
+  - [x] ユニット消費量の計算
+  - [x] 制限到達時の処理
 
 ## 備考
 - Phase: 1 (MVP)

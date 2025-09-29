@@ -10,22 +10,22 @@ Next.js 15 App Routerを使用したプロジェクトの初期設定と基本�
 - 必要なパッケージのインストール
 
 ## Todo
-- [ ] 必要なパッケージをインストール
-  - [ ] Framer Motion (アニメーション)
-  - [ ] Zustand (状態管理)
-  - [ ] Lucide React (アイコン)
-  - [ ] Recharts (グラフ)
-- [ ] ディレクトリ構造の作成
-  - [ ] app/channel/[id]
-  - [ ] app/api/youtube
-  - [ ] app/api/og
-  - [ ] components
-  - [ ] lib
-  - [ ] types
-- [ ] 環境変数の設定
-  - [ ] YOUTUBE_API_KEY
-- [ ] TypeScript型定義ファイルの作成 (types/index.ts)
-- [ ] 基本的なレイアウト設定 (app/layout.tsx)
+- [x] 必要なパッケージをインストール
+  - [x] Framer Motion (アニメーション)
+  - [x] Zustand (状態管理)
+  - [x] Lucide React (アイコン)
+  - [x] Recharts (グラフ)
+- [x] ディレクトリ構造の作成
+  - [x] app/channel/[id]
+  - [x] app/api/youtube
+  - [x] app/api/og
+  - [x] components
+  - [x] lib
+  - [x] types
+- [x] 環境変数の設定
+  - [x] YOUTUBE_API_KEY (.env.local.exampleファイル作成済み)
+- [x] TypeScript型定義ファイルの作成 (types/index.ts)
+- [x] 基本的なレイアウト設定 (app/layout.tsx)
 
 ## 備考
 - Phase: 1 (MVP)

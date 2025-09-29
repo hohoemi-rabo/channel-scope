@@ -136,7 +136,34 @@ class YouTubeAPIClient {
    */
   async getChannelVideos(channelId: string, maxResults: number = 50): Promise<YouTubeVideo[]> {
     try {
-      // 動画リストを取得
+      console.log(`Getting videos for channel: ${channelId}, maxResults: ${maxResults}`);
+
+      // まずチャンネル情報を取得してuploadPlaylistIdを取得
+      const channelResponse = await this.fetchAPI('/channels', {
+        part: 'contentDetails',
+        id: channelId,
+      });
+
+      if (channelResponse.items?.[0]?.contentDetails?.relatedPlaylists?.uploads) {
+        const uploadsPlaylistId = channelResponse.items[0].contentDetails.relatedPlaylists.uploads;
+        console.log(`Using uploads playlist: ${uploadsPlaylistId}`);
+
+        // playlistItemsを使って動画を取得
+        const playlistResponse = await this.fetchAPI('/playlistItems', {
+          part: 'snippet',
+          playlistId: uploadsPlaylistId,
+          maxResults: maxResults.toString(),
+        });
+
+        console.log(`Playlist response items count: ${playlistResponse.items?.length || 0}`);
+
+        if (playlistResponse.items?.length > 0) {
+          return this.processVideoData(playlistResponse.items, channelId, 'playlist');
+        }
+      }
+
+      // フォールバック: 従来のsearch方式
+      console.log('Falling back to search API');
       const searchResponse = await this.fetchAPI('/search', {
         part: 'snippet',
         channelId: channelId,
@@ -145,18 +172,43 @@ class YouTubeAPIClient {
         maxResults: maxResults.toString(),
       });
 
+      console.log(`Search response items count: ${searchResponse.items?.length || 0}`);
+
       if (!searchResponse.items || searchResponse.items.length === 0) {
+        console.log('No videos found in search response');
         return [];
       }
 
+      return this.processVideoData(searchResponse.items, channelId, 'search');
+    } catch (error) {
+      console.error('Error fetching channel videos:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 動画データを処理する共通メソッド
+   */
+  private async processVideoData(items: any[], channelId: string, source: 'playlist' | 'search'): Promise<YouTubeVideo[]> {
+    try {
       // 動画IDのリストを取得
-      const videoIds = searchResponse.items.map((item: any) => item.id.videoId).join(',');
+      const videoIds = items.map((item: any) => {
+        if (source === 'playlist') {
+          return item.snippet.resourceId.videoId;
+        } else {
+          return item.id.videoId;
+        }
+      }).join(',');
+
+      console.log(`Video IDs (${source}): ${videoIds}`);
 
       // 動画の詳細情報（統計と時間）を取得
       const videosResponse = await this.fetchAPI('/videos', {
         part: 'statistics,contentDetails',
         id: videoIds,
       });
+
+      console.log(`Videos response items count: ${videosResponse.items?.length || 0}`);
 
       // 動画情報をマップに変換
       const videoDetailsMap = new Map<string, { statistics: VideoStatistics; contentDetails: VideoContentDetails }>();
@@ -168,8 +220,9 @@ class YouTubeAPIClient {
       });
 
       // 結果を整形
-      return searchResponse.items.map((item: any) => {
-        const details = videoDetailsMap.get(item.id.videoId);
+      return items.map((item: any) => {
+        const videoId = source === 'playlist' ? item.snippet.resourceId.videoId : item.id.videoId;
+        const details = videoDetailsMap.get(videoId);
         const publishedAt = new Date(item.snippet.publishedAt);
         const now = new Date();
         const daysFromPublished = Math.floor((now.getTime() - publishedAt.getTime()) / (1000 * 60 * 60 * 24));
@@ -179,7 +232,7 @@ class YouTubeAPIClient {
         const commentCount = parseInt(details?.statistics?.commentCount || '0');
 
         return {
-          id: item.id.videoId,
+          id: videoId,
           channelId: channelId,
           title: item.snippet.title,
           description: item.snippet.description,
@@ -196,7 +249,7 @@ class YouTubeAPIClient {
         };
       });
     } catch (error) {
-      console.error('Error fetching channel videos:', error);
+      console.error('Error processing video data:', error);
       throw error;
     }
   }

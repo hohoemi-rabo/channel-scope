@@ -9,26 +9,26 @@
 - 基本的な表示機能
 
 ## Todo
-- [ ] チャンネルページの作成 (app/channel/[id]/page.tsx)
-  - [ ] 動的ルーティング設定
-  - [ ] データフェッチング
-- [ ] ChannelCardコンポーネント (components/ChannelCard.tsx)
-  - [ ] チャンネル名表示
-  - [ ] チャンネルアイコン表示
-  - [ ] 登録者数表示
-- [ ] VideoListコンポーネント (components/VideoList.tsx)
-  - [ ] 動画リストのレイアウト
-  - [ ] グリッド/リスト表示切り替え（オプション）
-- [ ] VideoCardコンポーネント (components/VideoCard.tsx)
-  - [ ] サムネイル表示（320x180px）
-  - [ ] タイトル表示
-  - [ ] 再生数表示（カンマ区切り）
-  - [ ] いいね数表示
-  - [ ] コメント数表示
-  - [ ] 投稿日時表示
-  - [ ] 動画時間表示
-- [ ] ローディング状態の実装
-- [ ] エラー状態の実装
+- [x] チャンネルページの作成 (app/channel/[id]/page.tsx)
+  - [x] 動的ルーティング設定
+  - [x] データフェッチング
+- [x] ChannelCardコンポーネント (components/ChannelCard.tsx)
+  - [x] チャンネル名表示
+  - [x] チャンネルアイコン表示
+  - [x] 登録者数表示
+- [x] VideoListコンポーネント (components/VideoList.tsx)
+  - [x] 動画リストのレイアウト
+  - [x] もっと見る機能（10本ずつ表示）
+- [x] VideoCardコンポーネント (components/VideoCard.tsx)
+  - [x] サムネイル表示（320x180px）
+  - [x] タイトル表示
+  - [x] 再生数表示（カンマ区切り）
+  - [x] いいね数表示
+  - [x] コメント数表示
+  - [x] 投稿日時表示
+  - [x] 動画時間表示
+- [x] ローディング状態の実装
+- [x] エラー状態の実装
 
 ## 備考
 - Phase: 1 (MVP)

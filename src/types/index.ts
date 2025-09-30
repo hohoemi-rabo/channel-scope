@@ -27,6 +27,9 @@ export interface YouTubeVideo {
   growthRate?: number;
   commentRate?: number;
   likeRate?: number;
+  engagementRate?: number;
+  isTrending?: boolean;
+  isNew?: boolean;
 }
 
 export interface VideoStatistics {

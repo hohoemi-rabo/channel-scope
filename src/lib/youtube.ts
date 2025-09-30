@@ -1,4 +1,13 @@
 import { YouTubeChannel, YouTubeVideo, VideoStatistics, VideoContentDetails } from '@/types';
+import {
+  calculateDaysSincePublished,
+  calculateGrowthRate,
+  calculateCommentRate,
+  calculateLikeRate,
+  calculateEngagementRate,
+  isTrending,
+  isNew,
+} from './analytics';
 
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const API_KEY = process.env.YOUTUBE_API_KEY;
@@ -223,13 +232,18 @@ class YouTubeAPIClient {
       return items.map((item: any) => {
         const videoId = source === 'playlist' ? item.snippet.resourceId.videoId : item.id.videoId;
         const details = videoDetailsMap.get(videoId);
-        const publishedAt = new Date(item.snippet.publishedAt);
-        const now = new Date();
-        const daysFromPublished = Math.floor((now.getTime() - publishedAt.getTime()) / (1000 * 60 * 60 * 24));
+        const publishedAt = item.snippet.publishedAt;
 
         const viewCount = parseInt(details?.statistics?.viewCount || '0');
         const likeCount = parseInt(details?.statistics?.likeCount || '0');
         const commentCount = parseInt(details?.statistics?.commentCount || '0');
+
+        // 分析指標を計算
+        const daysFromPublished = calculateDaysSincePublished(publishedAt);
+        const growthRate = calculateGrowthRate(viewCount, publishedAt);
+        const commentRate = calculateCommentRate(commentCount, viewCount);
+        const likeRate = calculateLikeRate(likeCount, viewCount);
+        const engagementRate = calculateEngagementRate(likeCount, commentCount, viewCount);
 
         return {
           id: videoId,
@@ -237,15 +251,18 @@ class YouTubeAPIClient {
           title: item.snippet.title,
           description: item.snippet.description,
           thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url,
-          publishedAt: item.snippet.publishedAt,
+          publishedAt,
           duration: this.parseDuration(details?.contentDetails?.duration || 'PT0S'),
           viewCount,
           likeCount,
           commentCount,
           daysFromPublished,
-          growthRate: daysFromPublished > 0 ? Math.round(viewCount / daysFromPublished) : viewCount,
-          commentRate: viewCount > 0 ? parseFloat(((commentCount / viewCount) * 100).toFixed(2)) : 0,
-          likeRate: viewCount > 0 ? parseFloat(((likeCount / viewCount) * 100).toFixed(2)) : 0,
+          growthRate,
+          commentRate,
+          likeRate,
+          engagementRate,
+          isTrending: isTrending(growthRate, publishedAt),
+          isNew: isNew(publishedAt),
         };
       });
     } catch (error) {

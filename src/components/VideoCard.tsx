@@ -1,4 +1,4 @@
-import { ExternalLink, Clock, Eye, ThumbsUp, MessageCircle, TrendingUp, Calendar } from 'lucide-react';
+import { ExternalLink, Eye, ThumbsUp, MessageCircle, TrendingUp, Calendar, Zap } from 'lucide-react';
 import { YouTubeVideo } from '@/types';
 
 interface VideoCardProps {
@@ -23,10 +23,16 @@ export default function VideoCard({ video }: VideoCardProps) {
     const date = new Date(dateString);
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffMinutes = Math.floor(diffTime / (1000 * 60));
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 1) {
-      return '1日前';
+    if (diffMinutes < 1) {
+      return 'たった今';
+    } else if (diffMinutes < 60) {
+      return `${diffMinutes}分前`;
+    } else if (diffHours < 24) {
+      return `${diffHours}時間前`;
     } else if (diffDays < 7) {
       return `${diffDays}日前`;
     } else if (diffDays < 30) {
@@ -45,9 +51,9 @@ export default function VideoCard({ video }: VideoCardProps) {
     window.open(`https://youtube.com/watch?v=${video.id}`, '_blank', 'noopener,noreferrer');
   };
 
-  // バッジの判定
-  const isNew = video.daysFromPublished !== undefined && video.daysFromPublished <= 3;
-  const isTrending = video.growthRate !== undefined && video.growthRate > 10000; // 1日1万再生以上
+  // バッジの判定（APIから計算済みのフラグを使用）
+  const showNewBadge = video.isNew ?? false;
+  const showTrendingBadge = video.isTrending ?? false;
 
   return (
     <div className="card hover:shadow-lg transition-all duration-200 group">
@@ -75,12 +81,12 @@ export default function VideoCard({ video }: VideoCardProps) {
 
           {/* バッジ */}
           <div className="absolute top-2 left-2 flex gap-1">
-            {isNew && (
+            {showNewBadge && (
               <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                 NEW
               </span>
             )}
-            {isTrending && (
+            {showTrendingBadge && (
               <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
                 急上昇
@@ -104,7 +110,7 @@ export default function VideoCard({ video }: VideoCardProps) {
             </div>
 
             {/* 統計情報 */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
               <div className="flex items-center gap-2 text-sm">
                 <Eye className="w-4 h-4 text-gray-500" />
                 <span className="font-medium">{formatNumber(video.viewCount)}</span>
@@ -124,6 +130,11 @@ export default function VideoCard({ video }: VideoCardProps) {
                 <TrendingUp className="w-4 h-4 text-gray-500" />
                 <span className="font-medium">{formatNumber(video.growthRate || 0)}</span>
                 <span className="text-gray-500">/日</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Zap className="w-4 h-4 text-yellow-500" />
+                <span className="font-medium">{video.engagementRate}%</span>
+                <span className="text-gray-500">反応</span>
               </div>
             </div>
 

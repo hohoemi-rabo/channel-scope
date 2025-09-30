@@ -2,6 +2,7 @@
 
 import { Share2 } from 'lucide-react';
 import { YouTubeChannel, YouTubeVideo } from '@/types';
+import { trackShare } from '@/lib/tracking';
 
 interface ShareButtonProps {
   channel: YouTubeChannel;
@@ -23,6 +24,9 @@ export default function ShareButton({ channel, videos }: ShareButtonProps) {
 
     // X（Twitter）シェアURLを生成
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}&hashtags=チャンネルスコープ`;
+
+    // アナリティクストラッキング
+    trackShare(channel.title, 'twitter');
 
     // 新しいウィンドウで開く
     window.open(twitterUrl, '_blank', 'width=550,height=420');

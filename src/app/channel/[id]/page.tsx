@@ -10,6 +10,7 @@ import ChannelCard from '@/components/ChannelCard';
 import VideoList from '@/components/VideoList';
 import SortTabs from '@/components/SortTabs';
 import ShareButton from '@/components/ShareButton';
+import { trackChannelView, trackError } from '@/lib/tracking';
 
 // 重いコンポーネントを動的インポート（Rechartsを含むため）
 const VideoChart = dynamic(() => import('@/components/VideoChart'), {
@@ -49,9 +50,18 @@ export default function ChannelPage() {
 
         setChannel(data.channel);
         setVideos(data.videos || []);
+
+        // アナリティクストラッキング
+        if (data.channel) {
+          trackChannelView(channelId, data.channel.title);
+        }
       } catch (err) {
         console.error('Error fetching channel data:', err);
-        setError(err instanceof Error ? err.message : 'エラーが発生しました');
+        const errorMessage = err instanceof Error ? err.message : 'エラーが発生しました';
+        setError(errorMessage);
+
+        // エラートラッキング
+        trackError('channel_fetch_error', errorMessage);
       } finally {
         setIsLoading(false);
       }

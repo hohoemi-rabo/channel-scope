@@ -3,6 +3,7 @@
 import { Eye, Calendar, TrendingUp, ArrowUpDown, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useSortStore } from '@/lib/store';
 import { SortType } from '@/types';
+import { trackSortChange } from '@/lib/tracking';
 
 interface SortOption {
   type: SortType;
@@ -67,7 +68,10 @@ export default function SortTabs() {
           return (
             <button
               key={option.type}
-              onClick={() => setSortType(option.type)}
+              onClick={() => {
+                setSortType(option.type);
+                trackSortChange(option.type);
+              }}
               className={`
                 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
                 ${

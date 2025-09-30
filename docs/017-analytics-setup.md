@@ -10,26 +10,33 @@
 - パフォーマンス監視
 
 ## Todo
-- [ ] Vercel Analytics設定
-  - [ ] Vercelダッシュボードで有効化
-  - [ ] パッケージインストール (@vercel/analytics)
-  - [ ] 初期化コード追加
-- [ ] カスタムイベントの実装
-  - [ ] 検索イベント
-  - [ ] ソート変更イベント
-  - [ ] シェアボタンクリック
-  - [ ] エラー発生イベント
+- [x] Vercel Analytics設定
+  - [x] パッケージインストール (@vercel/analytics)
+  - [x] 初期化コード追加（layout.tsxに<Analytics />追加）
+  - [ ] Vercelダッシュボードで有効化（デプロイ後に設定）
+- [x] カスタムイベントの実装
+  - [x] 検索イベント（trackChannelSearch）
+  - [x] チャンネル表示イベント（trackChannelView）
+  - [x] ソート変更イベント（trackSortChange）
+  - [x] シェアボタンクリック（trackShare）
+  - [x] エラー発生イベント（trackError）
+  - [x] API制限到達イベント（trackAPILimit）
+- [x] トラッキングユーティリティ作成
+  - [x] lib/tracking.ts作成
+  - [x] SearchBarにトラッキング追加
+  - [x] SortTabsにトラッキング追加
+  - [x] ShareButtonにトラッキング追加
+  - [x] チャンネルページにトラッキング追加
 - [ ] パフォーマンス監視
-  - [ ] Core Web Vitals計測
-  - [ ] ページロード時間
-  - [ ] API応答時間
+  - [x] Core Web Vitals計測（Vercel Analytics自動計測）
+  - [ ] カスタムパフォーマンス計測（今後実装）
 - [ ] ダッシュボード設定
-  - [ ] カスタムダッシュボード作成
-  - [ ] アラート設定
-  - [ ] レポート設定
-- [ ] プライバシー対応
-  - [ ] IPアドレス匿名化
-  - [ ] GDPR対応検討
+  - [ ] Vercelダッシュボードで確認（デプロイ後）
+  - [ ] カスタムダッシュボード作成（デプロイ後）
+  - [ ] アラート設定（デプロイ後）
+- [x] プライバシー対応
+  - [x] 個人情報は送信しない設計
+  - [x] チャンネル名は50文字まで、エラーメッセージは100文字まで制限
 
 ## 備考
 - Phase: 4 (公開準備)

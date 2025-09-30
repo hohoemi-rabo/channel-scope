@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Search, X, Loader2, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { YouTubeChannel } from '@/types';
+import { trackChannelSearch } from '@/lib/tracking';
 
 interface SearchBarProps {
   className?: string;
@@ -53,6 +54,9 @@ export default function SearchBar({ className = '', autoFocus = false }: SearchB
 
       setSuggestions(data.channels || []);
       setShowDropdown(true);
+
+      // アナリティクストラッキング
+      trackChannelSearch(searchQuery, data.channels?.length || 0);
     } catch (err) {
       console.error('Search error:', err);
       setError(err instanceof Error ? err.message : 'エラーが発生しました');

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { Search, X, Loader2, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { YouTubeChannel } from '@/types';
@@ -223,12 +224,15 @@ export default function SearchBar({ className = '', autoFocus = false }: SearchB
                 }`}
               >
                 {/* チャンネルアイコン */}
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-[#FF0000] to-[#CC0000] rounded-full flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-[#FF0000] to-[#CC0000] rounded-full flex items-center justify-center relative">
                   {channel.thumbnail ? (
-                    <img
+                    <Image
                       src={channel.thumbnail}
                       alt={channel.title}
-                      className="w-12 h-12 rounded-full object-cover"
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                      priority={false}
                     />
                   ) : (
                     <Users className="w-6 h-6 text-white" />

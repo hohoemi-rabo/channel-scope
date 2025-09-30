@@ -2,8 +2,6 @@
 
 import { useMemo } from 'react';
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -60,7 +58,7 @@ export default function VideoChart({ videos, limit = 10 }: VideoChartProps) {
   }
 
   // カスタムツールチップ
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { fullTitle: string; name: string; views: number; likes: number; comments: number } }> }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (

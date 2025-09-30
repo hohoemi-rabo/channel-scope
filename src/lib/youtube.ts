@@ -9,6 +9,38 @@ import {
   isNew,
 } from './analytics';
 
+// YouTube API レスポンスの型定義
+interface YouTubeAPIItem {
+  id: string | { channelId: string; videoId: string };
+  snippet: {
+    title: string;
+    description: string;
+    thumbnails: {
+      default?: { url: string };
+      medium?: { url: string };
+      high?: { url: string };
+    };
+    customUrl?: string;
+    publishedAt: string;
+    channelId?: string;
+    channelTitle?: string;
+    resourceId?: { videoId: string };
+  };
+  statistics?: {
+    subscriberCount?: string;
+    videoCount?: string;
+    viewCount?: string;
+    likeCount?: string;
+    commentCount?: string;
+  };
+  contentDetails?: {
+    duration?: string;
+    relatedPlaylists?: {
+      uploads?: string;
+    };
+  };
+}
+
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -83,7 +115,12 @@ class YouTubeAPIClient {
       }
 
       // チャンネルIDのリストを取得
-      const channelIds = searchResponse.items.map((item: any) => item.id.channelId).join(',');
+      const channelIds = searchResponse.items.map((item: YouTubeAPIItem) => {
+        if (typeof item.id === 'object' && 'channelId' in item.id) {
+          return item.id.channelId;
+        }
+        return '';
+      }).filter(Boolean).join(',');
 
       // チャンネルの詳細情報を取得
       const channelsResponse = await this.fetchAPI('/channels', {
@@ -91,17 +128,17 @@ class YouTubeAPIClient {
         id: channelIds,
       });
 
-      return channelsResponse.items.map((item: any) => ({
-        id: item.id,
+      return channelsResponse.items ? channelsResponse.items.map((item: YouTubeAPIItem) => ({
+        id: typeof item.id === 'string' ? item.id : '',
         title: item.snippet.title,
         description: item.snippet.description,
         thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url,
         customUrl: item.snippet.customUrl,
-        subscriberCount: parseInt(item.statistics.subscriberCount || '0'),
-        videoCount: parseInt(item.statistics.videoCount || '0'),
-        viewCount: parseInt(item.statistics.viewCount || '0'),
+        subscriberCount: parseInt(item.statistics?.subscriberCount || '0'),
+        videoCount: parseInt(item.statistics?.videoCount || '0'),
+        viewCount: parseInt(item.statistics?.viewCount || '0'),
         publishedAt: item.snippet.publishedAt,
-      }));
+      })) : [];
     } catch (error) {
       console.error('Error searching channels:', error);
       throw error;
@@ -198,16 +235,16 @@ class YouTubeAPIClient {
   /**
    * 動画データを処理する共通メソッド
    */
-  private async processVideoData(items: any[], channelId: string, source: 'playlist' | 'search'): Promise<YouTubeVideo[]> {
+  private async processVideoData(items: YouTubeAPIItem[], channelId: string, source: 'playlist' | 'search'): Promise<YouTubeVideo[]> {
     try {
       // 動画IDのリストを取得
-      const videoIds = items.map((item: any) => {
+      const videoIds = items.map((item: YouTubeAPIItem) => {
         if (source === 'playlist') {
-          return item.snippet.resourceId.videoId;
+          return item.snippet.resourceId?.videoId;
         } else {
-          return item.id.videoId;
+          return typeof item.id === 'object' && 'videoId' in item.id ? item.id.videoId : '';
         }
-      }).join(',');
+      }).filter(Boolean).join(',');
 
       console.log(`Video IDs (${source}): ${videoIds}`);
 
@@ -221,17 +258,21 @@ class YouTubeAPIClient {
 
       // 動画情報をマップに変換
       const videoDetailsMap = new Map<string, { statistics: VideoStatistics; contentDetails: VideoContentDetails }>();
-      videosResponse.items.forEach((item: any) => {
-        videoDetailsMap.set(item.id, {
-          statistics: item.statistics,
-          contentDetails: item.contentDetails,
-        });
+      videosResponse.items?.forEach((item: YouTubeAPIItem) => {
+        if (typeof item.id === 'string') {
+          videoDetailsMap.set(item.id, {
+            statistics: item.statistics as VideoStatistics,
+            contentDetails: item.contentDetails as VideoContentDetails,
+          });
+        }
       });
 
       // 結果を整形
-      return items.map((item: any) => {
-        const videoId = source === 'playlist' ? item.snippet.resourceId.videoId : item.id.videoId;
-        const details = videoDetailsMap.get(videoId);
+      return items.map((item: YouTubeAPIItem) => {
+        const videoId = source === 'playlist'
+          ? item.snippet.resourceId?.videoId || ''
+          : (typeof item.id === 'object' && 'videoId' in item.id ? item.id.videoId : '');
+        const details = videoDetailsMap.get(videoId || '');
         const publishedAt = item.snippet.publishedAt;
 
         const viewCount = parseInt(details?.statistics?.viewCount || '0');
@@ -250,7 +291,7 @@ class YouTubeAPIClient {
           channelId: channelId,
           title: item.snippet.title,
           description: item.snippet.description,
-          thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url,
+          thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url || '',
           publishedAt,
           duration: this.parseDuration(details?.contentDetails?.duration || 'PT0S'),
           viewCount,

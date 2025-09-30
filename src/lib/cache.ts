@@ -14,7 +14,7 @@ interface CacheEntry<T> {
   expiresAt: number;
 }
 
-const memoryCache = new Map<string, CacheEntry<any>>();
+const memoryCache = new Map<string, CacheEntry<unknown>>();
 
 /**
  * Vercel KVが利用可能かチェック

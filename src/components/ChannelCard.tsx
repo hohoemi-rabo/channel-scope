@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { ExternalLink, Calendar, Users } from 'lucide-react';
 import { YouTubeChannel } from '@/types';
 
@@ -27,12 +28,15 @@ export default function ChannelCard({ channel }: ChannelCardProps) {
       <div className="flex flex-col md:flex-row gap-6">
         {/* チャンネルアイコン */}
         <div className="flex-shrink-0">
-          <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-[#FF0000] to-[#CC0000] rounded-full flex items-center justify-center overflow-hidden">
+          <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-[#FF0000] to-[#CC0000] rounded-full flex items-center justify-center overflow-hidden relative">
             {channel.thumbnail ? (
-              <img
+              <Image
                 src={channel.thumbnail}
                 alt={channel.title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 96px, 128px"
+                className="object-cover"
+                priority={false}
               />
             ) : (
               <Users className="w-12 h-12 md:w-16 md:h-16 text-white" />

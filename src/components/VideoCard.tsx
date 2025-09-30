@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ExternalLink, Eye, ThumbsUp, MessageCircle, TrendingUp, Calendar, Zap } from 'lucide-react';
 import { YouTubeVideo } from '@/types';
 import Badge from './Badge';
@@ -63,12 +64,15 @@ export default function VideoCard({ video }: VideoCardProps) {
       <div className="flex flex-col lg:flex-row gap-4">
         {/* サムネイル */}
         <div className="relative flex-shrink-0">
-          <div className="aspect-video w-full lg:w-80 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+          <div className="aspect-video w-full lg:w-80 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden relative">
             {video.thumbnail ? (
-              <img
+              <Image
                 src={video.thumbnail}
                 alt={video.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                fill
+                sizes="(max-width: 1024px) 100vw, 320px"
+                className="object-cover group-hover:scale-105 transition-transform duration-200"
+                priority={false}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">

@@ -2,14 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { ArrowLeft, ExternalLink, Users, VideoIcon, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { YouTubeChannel, YouTubeVideo } from '@/types';
 import ChannelCard from '@/components/ChannelCard';
 import VideoList from '@/components/VideoList';
 import SortTabs from '@/components/SortTabs';
-import VideoChart from '@/components/VideoChart';
 import ShareButton from '@/components/ShareButton';
+
+// 重いコンポーネントを動的インポート（Rechartsを含むため）
+const VideoChart = dynamic(() => import('@/components/VideoChart'), {
+  loading: () => (
+    <div className="card">
+      <div className="h-64 flex items-center justify-center">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF0000]"></div>
+      </div>
+    </div>
+  ),
+  ssr: false,
+});
 
 export default function ChannelPage() {
   const params = useParams();

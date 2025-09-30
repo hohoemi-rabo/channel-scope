@@ -112,7 +112,7 @@ export function classifyError(error: unknown): AppError {
 /**
  * エラーをログに記録
  */
-export function logError(error: AppError, context?: Record<string, any>): void {
+export function logError(error: AppError, context?: Record<string, unknown>): void {
   console.error('[App Error]', {
     type: error.type,
     message: error.message,

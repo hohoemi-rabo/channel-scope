@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import youtubeClient from '@/lib/youtube';
 import { ChannelSearchResponse } from '@/types';
 import { apiRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { getCachedData, generateCacheKey } from '@/lib/cache';
 
 export async function GET(request: NextRequest) {
   try {
@@ -44,8 +45,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // YouTube APIを呼び出し
-    const channels = await youtubeClient.searchChannels(query);
+    // キャッシュキーを生成
+    const cacheKey = generateCacheKey('search', query.toLowerCase().trim());
+
+    // キャッシュ付きでYouTube APIを呼び出し
+    const channels = await getCachedData(
+      cacheKey,
+      () => youtubeClient.searchChannels(query),
+      30 * 60 // 30分
+    );
 
     const response: ChannelSearchResponse = {
       channels,

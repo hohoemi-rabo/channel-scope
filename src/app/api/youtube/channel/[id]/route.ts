@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import youtubeClient from '@/lib/youtube';
 import { ChannelDetailsResponse } from '@/types';
+import { getCachedData, generateCacheKey } from '@/lib/cache';
 
 export async function GET(
   request: NextRequest,
@@ -17,24 +18,31 @@ export async function GET(
       );
     }
 
-    // 並行してチャンネル情報と動画リストを取得
-    const [channel, videos] = await Promise.all([
-      youtubeClient.getChannelById(channelId),
-      youtubeClient.getChannelVideos(channelId, 50),
-    ]);
+    // キャッシュキーを生成
+    const cacheKey = generateCacheKey('channel', channelId);
 
-    // チャンネルが見つからない場合
-    if (!channel) {
-      return NextResponse.json(
-        { error: '該当するチャンネルが見つかりません' },
-        { status: 404 }
-      );
-    }
+    // キャッシュ付きでチャンネル情報と動画リストを取得
+    const response = await getCachedData<ChannelDetailsResponse>(
+      cacheKey,
+      async () => {
+        // 並行してチャンネル情報と動画リストを取得
+        const [channel, videos] = await Promise.all([
+          youtubeClient.getChannelById(channelId),
+          youtubeClient.getChannelVideos(channelId, 50),
+        ]);
 
-    const response: ChannelDetailsResponse = {
-      channel,
-      videos,
-    };
+        // チャンネルが見つからない場合
+        if (!channel) {
+          throw new Error('Channel not found');
+        }
+
+        return {
+          channel,
+          videos,
+        };
+      },
+      30 * 60 // 30分
+    );
 
     return NextResponse.json(response, {
       headers: {

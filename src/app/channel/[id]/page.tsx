@@ -8,6 +8,7 @@ import { YouTubeChannel, YouTubeVideo } from '@/types';
 import ChannelCard from '@/components/ChannelCard';
 import VideoList from '@/components/VideoList';
 import SortTabs from '@/components/SortTabs';
+import VideoChart from '@/components/VideoChart';
 
 export default function ChannelPage() {
   const params = useParams();
@@ -136,6 +137,11 @@ export default function ChannelPage() {
           <div className="text-2xl font-bold">{channel.viewCount.toLocaleString()}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">総再生数</div>
         </div>
+      </div>
+
+      {/* 再生数推移グラフ */}
+      <div className="mb-8">
+        <VideoChart videos={videos} limit={10} />
       </div>
 
       {/* 動画リスト */}

@@ -10,7 +10,10 @@ const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://channel-scope.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "チャンネルスコープ - YouTubeチャンネル分析ツール",
   description: "YouTubeチャンネルの成長を可視化する無料分析ツール。配信者のための簡単で使いやすいチャンネル分析サービス。",
   keywords: ["YouTube", "分析", "チャンネル", "配信者", "動画", "統計"],
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    url: "https://channelscope.vercel.app",
+    url: "https://channel-scope.vercel.app",
     title: "チャンネルスコープ",
     description: "YouTubeチャンネルの成長を可視化する無料分析ツール",
     siteName: "チャンネルスコープ",

@@ -13,16 +13,16 @@ interface SortOption {
 
 const sortOptions: SortOption[] = [
   {
-    type: 'views',
-    label: '再生数',
-    icon: <Eye className="w-4 h-4" />,
-    description: '再生回数の多い順',
-  },
-  {
     type: 'date',
     label: '投稿日',
     icon: <Calendar className="w-4 h-4" />,
     description: '投稿が新しい順',
+  },
+  {
+    type: 'views',
+    label: '再生数',
+    icon: <Eye className="w-4 h-4" />,
+    description: '再生回数の多い順',
   },
   {
     type: 'growth',

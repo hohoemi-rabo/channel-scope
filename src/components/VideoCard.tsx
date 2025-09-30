@@ -1,5 +1,8 @@
+'use client';
+
 import { ExternalLink, Eye, ThumbsUp, MessageCircle, TrendingUp, Calendar, Zap } from 'lucide-react';
 import { YouTubeVideo } from '@/types';
+import Badge from './Badge';
 
 interface VideoCardProps {
   video: YouTubeVideo;
@@ -81,17 +84,8 @@ export default function VideoCard({ video }: VideoCardProps) {
 
           {/* バッジ */}
           <div className="absolute top-2 left-2 flex gap-1">
-            {showNewBadge && (
-              <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                NEW
-              </span>
-            )}
-            {showTrendingBadge && (
-              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" />
-                急上昇
-              </span>
-            )}
+            {showNewBadge && <Badge type="new" animated={true} />}
+            {showTrendingBadge && <Badge type="trending" animated={true} />}
           </div>
         </div>
 

@@ -9,6 +9,7 @@ import ChannelCard from '@/components/ChannelCard';
 import VideoList from '@/components/VideoList';
 import SortTabs from '@/components/SortTabs';
 import VideoChart from '@/components/VideoChart';
+import ShareButton from '@/components/ShareButton';
 
 export default function ChannelPage() {
   const params = useParams();
@@ -104,8 +105,8 @@ export default function ChannelPage() {
 
   return (
     <div className="container-custom py-8 animate-fade-in">
-      {/* ヘッダー（戻るボタン） */}
-      <div className="mb-6">
+      {/* ヘッダー（戻るボタンとシェアボタン） */}
+      <div className="mb-6 flex items-center justify-between">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-[#FF0000] transition-colors"
@@ -113,6 +114,7 @@ export default function ChannelPage() {
           <ArrowLeft className="w-4 h-4" />
           検索に戻る
         </Link>
+        <ShareButton channel={channel} videos={videos} />
       </div>
 
       {/* チャンネル情報 */}

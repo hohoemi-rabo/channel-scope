@@ -21,11 +21,20 @@ export const metadata: Metadata = {
     title: "チャンネルスコープ",
     description: "YouTubeチャンネルの成長を可視化する無料分析ツール",
     siteName: "チャンネルスコープ",
+    images: [
+      {
+        url: "/api/og?channel=ChannelScope&subscribers=0&videos=0&views=0",
+        width: 1200,
+        height: 630,
+        alt: "チャンネルスコープ - YouTubeチャンネル分析ツール",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "チャンネルスコープ",
     description: "YouTubeチャンネルの成長を可視化する無料分析ツール",
+    images: ["/api/og?channel=ChannelScope&subscribers=0&videos=0&views=0"],
   },
 };
 

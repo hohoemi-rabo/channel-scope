@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, Calendar, TrendingUp, ArrowUpDown } from 'lucide-react';
+import { Eye, Calendar, TrendingUp, ArrowUpDown, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useSortStore } from '@/lib/store';
 import { SortType } from '@/types';
 
@@ -30,6 +30,18 @@ const sortOptions: SortOption[] = [
     icon: <TrendingUp className="w-4 h-4" />,
     description: '1日あたりの平均再生数',
   },
+  {
+    type: 'comments',
+    label: 'コメント率',
+    icon: <MessageCircle className="w-4 h-4" />,
+    description: 'コメント率の高い順',
+  },
+  {
+    type: 'likes',
+    label: 'いいね率',
+    icon: <ThumbsUp className="w-4 h-4" />,
+    description: 'いいね率の高い順',
+  },
 ];
 
 export default function SortTabs() {
@@ -49,7 +61,7 @@ export default function SortTabs() {
   return (
     <div className="mb-8">
       {/* ソートタブ */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap gap-2 mb-4">
         {sortOptions.map((option) => {
           const isActive = sortType === option.type;
           return (
@@ -57,7 +69,7 @@ export default function SortTabs() {
               key={option.type}
               onClick={() => setSortType(option.type)}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
+                flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
                 ${
                   isActive
                     ? 'bg-[#FF0000] text-white shadow-md'
@@ -66,7 +78,7 @@ export default function SortTabs() {
               `}
             >
               {option.icon}
-              <span>{option.label}</span>
+              <span className="text-sm sm:text-base">{option.label}</span>
               {isActive && (
                 <span className="text-xs opacity-90">
                   {getSortOrderIcon()}

@@ -52,11 +52,26 @@ export default function SortTabs() {
     if (sortType === 'date') {
       return sortOrder === 'desc' ? '新しい順' : '古い順';
     }
-    return sortOrder === 'desc' ? '多い順' : '少ない順';
+    return sortOrder === 'desc' ? '高い順' : '低い順';
   };
 
   const getSortOrderIcon = () => {
     return sortOrder === 'desc' ? '↓' : '↑';
+  };
+
+  const getCurrentDescription = () => {
+    const option = sortOptions.find((opt) => opt.type === sortType);
+    if (!option) return '';
+
+    if (sortType === 'date') {
+      return sortOrder === 'desc' ? '投稿が新しい順' : '投稿が古い順';
+    }
+
+    // 「いいね率の高い順」→「いいね率の低い順」のように変換
+    const baseDescription = option.description.replace('高い順', '').replace('多い順', '');
+    return sortOrder === 'desc'
+      ? baseDescription + '高い順'
+      : baseDescription + '低い順';
   };
 
   return (
@@ -101,7 +116,7 @@ export default function SortTabs() {
           </span>
           <span className="mx-2">•</span>
           <span>
-            {sortOptions.find((opt) => opt.type === sortType)?.description}
+            {getCurrentDescription()}
           </span>
         </div>
 

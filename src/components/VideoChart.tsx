@@ -114,8 +114,8 @@ export default function VideoChart({ videos, limit = 10 }: VideoChartProps) {
           >
             <defs>
               <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#FF0000" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#FF0000" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
@@ -135,7 +135,7 @@ export default function VideoChart({ videos, limit = 10 }: VideoChartProps) {
             <Area
               type="monotone"
               dataKey="views"
-              stroke="#FF0000"
+              stroke="#10b981"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorViews)"
@@ -149,7 +149,7 @@ export default function VideoChart({ videos, limit = 10 }: VideoChartProps) {
       {/* 凡例 */}
       <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-0.5 bg-[#FF0000]"></div>
+          <div className="w-4 h-0.5 bg-emerald-500"></div>
           <span>再生数</span>
         </div>
       </div>

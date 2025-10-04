@@ -98,7 +98,7 @@ export default function VideoChart({ videos, limit = 10 }: VideoChartProps) {
     <div className="card">
       {/* ヘッダー */}
       <div className="flex items-center gap-2 mb-6">
-        <TrendingUp className="w-5 h-5 text-[#FF0000]" />
+        <TrendingUp className="w-5 h-5 text-emerald-500" />
         <h2 className="text-xl font-bold">再生数推移</h2>
         <span className="text-sm text-gray-500 dark:text-gray-400">
           （最新{chartData.length}本）

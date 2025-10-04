@@ -42,10 +42,10 @@ export default function Header() {
               ホーム
             </Link>
             <Link
-              href="/about"
+              href="/contact"
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#FF0000] transition-colors"
             >
-              使い方
+              お問い合わせ
             </Link>
           </nav>
 
@@ -92,11 +92,11 @@ export default function Header() {
                 ホーム
               </Link>
               <Link
-                href="/about"
+                href="/contact"
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                使い方
+                お問い合わせ
               </Link>
             </nav>
             <p className="mt-4 px-4 text-xs text-gray-600 dark:text-gray-400">

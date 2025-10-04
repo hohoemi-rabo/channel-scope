@@ -10,6 +10,7 @@ import ChannelCard from '@/components/ChannelCard';
 import VideoList from '@/components/VideoList';
 import SortTabs from '@/components/SortTabs';
 import ShareButton from '@/components/ShareButton';
+import SearchBar from '@/components/SearchBar';
 import { trackChannelView, trackError } from '@/lib/tracking';
 
 // 重いコンポーネントを動的インポート（Rechartsを含むため）
@@ -128,7 +129,7 @@ export default function ChannelPage() {
   return (
     <div className="container-custom py-8 animate-fade-in">
       {/* ヘッダー（戻るボタンとシェアボタン） */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-[#FF0000] transition-colors"
@@ -137,6 +138,11 @@ export default function ChannelPage() {
           検索に戻る
         </Link>
         <ShareButton channel={channel} videos={videos} />
+      </div>
+
+      {/* 検索バー */}
+      <div className="mb-6">
+        <SearchBar />
       </div>
 
       {/* チャンネル情報 */}

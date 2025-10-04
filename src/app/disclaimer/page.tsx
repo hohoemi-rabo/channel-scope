@@ -184,7 +184,7 @@ export default function DisclaimerPage() {
             本サービスに関するご質問やご意見は、GitHubのIssuesよりお問い合わせください。
           </p>
           <a
-            href="https://github.com/yourusername/channel-scope/issues"
+            href="https://github.com/hohoemi-rabo/channel-scope/issues"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[#FF0000] hover:underline font-medium"

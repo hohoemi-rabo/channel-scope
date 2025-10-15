@@ -12,6 +12,7 @@ import SortTabs from '@/components/SortTabs';
 import ShareButton from '@/components/ShareButton';
 import SearchBar from '@/components/SearchBar';
 import { trackChannelView, trackError } from '@/lib/tracking';
+import { formatJapaneseSubscribers, formatJapaneseViews } from '@/lib/format-utils';
 
 // 重いコンポーネントを動的インポート（Rechartsを含むため）
 const VideoChart = dynamic(() => import('@/components/VideoChart'), {
@@ -159,12 +160,12 @@ export default function ChannelPage() {
         </div>
         <div className="card text-center">
           <Users className="w-8 h-8 mx-auto mb-2 text-[#FF0000]" />
-          <div className="text-2xl font-bold">{channel.subscriberCount.toLocaleString()}</div>
+          <div className="text-2xl font-bold">{formatJapaneseSubscribers(channel.subscriberCount)}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">登録者</div>
         </div>
         <div className="card text-center">
           <Eye className="w-8 h-8 mx-auto mb-2 text-[#FF0000]" />
-          <div className="text-2xl font-bold">{channel.viewCount.toLocaleString()}</div>
+          <div className="text-2xl font-bold">{formatJapaneseViews(channel.viewCount)}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">総再生数</div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ExternalLink, Calendar, Users } from 'lucide-react';
 import { YouTubeChannel } from '@/types';
+import { formatJapaneseNumber } from '@/lib/format-utils';
 
 interface ChannelCardProps {
   channel: YouTubeChannel;
@@ -97,11 +98,11 @@ export default function ChannelCard({ channel }: ChannelCardProps) {
             <div className="text-xs text-gray-600 dark:text-gray-400">動画</div>
           </div>
           <div>
-            <div className="text-lg font-bold">{channel.subscriberCount.toLocaleString()}</div>
+            <div className="text-lg font-bold">{formatJapaneseNumber(channel.subscriberCount)}人</div>
             <div className="text-xs text-gray-600 dark:text-gray-400">登録者</div>
           </div>
           <div>
-            <div className="text-lg font-bold">{(channel.viewCount / 10000).toFixed(1)}万</div>
+            <div className="text-lg font-bold">{formatJapaneseNumber(channel.viewCount)}回</div>
             <div className="text-xs text-gray-600 dark:text-gray-400">総再生数</div>
           </div>
         </div>

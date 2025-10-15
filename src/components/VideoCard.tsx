@@ -4,25 +4,13 @@ import Image from 'next/image';
 import { ExternalLink, Eye, ThumbsUp, MessageCircle, TrendingUp, Calendar, Zap } from 'lucide-react';
 import { YouTubeVideo } from '@/types';
 import Badge from './Badge';
+import { formatJapaneseNumber } from '@/lib/format-utils';
 
 interface VideoCardProps {
   video: YouTubeVideo;
 }
 
 export default function VideoCard({ video }: VideoCardProps) {
-  const formatNumber = (num: number): string => {
-    if (num >= 100000000) {
-      return `${(num / 100000000).toFixed(1)}億`;
-    }
-    if (num >= 10000000) {
-      return `${(num / 10000000).toFixed(1)}千万`;
-    }
-    if (num >= 10000) {
-      return `${(num / 10000).toFixed(1)}万`;
-    }
-    return num.toLocaleString();
-  };
-
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     const now = new Date();
@@ -111,22 +99,22 @@ export default function VideoCard({ video }: VideoCardProps) {
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
               <div className="flex items-center gap-2 text-sm">
                 <Eye className="w-4 h-4 text-gray-500" />
-                <span className="font-medium">{formatNumber(video.viewCount)}</span>
+                <span className="font-medium">{formatJapaneseNumber(video.viewCount)}</span>
                 <span className="text-gray-500">再生</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <ThumbsUp className="w-4 h-4 text-gray-500" />
-                <span className="font-medium">{formatNumber(video.likeCount)}</span>
+                <span className="font-medium">{formatJapaneseNumber(video.likeCount)}</span>
                 <span className="text-gray-500">({video.likeRate}%)</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <MessageCircle className="w-4 h-4 text-gray-500" />
-                <span className="font-medium">{formatNumber(video.commentCount)}</span>
+                <span className="font-medium">{formatJapaneseNumber(video.commentCount)}</span>
                 <span className="text-gray-500">({video.commentRate}%)</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <TrendingUp className="w-4 h-4 text-gray-500" />
-                <span className="font-medium">{formatNumber(video.growthRate || 0)}</span>
+                <span className="font-medium">{formatJapaneseNumber(video.growthRate || 0)}</span>
                 <span className="text-gray-500">/日</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
